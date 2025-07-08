@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Life</title>
+    <style> 
+        body {
+            background-image: url('https://i.pinimg.com/736x/99/82/7c/99827cfb2942879e9bb63dfade5167e0.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px; /* Увеличено */
+            color: #333;
+            font-size: 2.5em; /* Увеличено */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Добавлена тень */
+        }
+        #devices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Основное увеличение расстояния между карточками */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .device-card {
+            background: rgba(255, 255, 255, 0.95); /* Полупрозрачный белый */
+            border-radius: 12px; /* Увеличено */
+            padding: 20px; /* Увеличено */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Усилена тень */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация */
+        }
+        .device-card:hover {
+            transform: translateY(-3px); /* Эффект при наведении */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Увеличено расстояние между иконкой и текстом */
+        }
+        .device-icon {
+            font-size: 28px; /* Увеличено */
+        }
+        .device-name {
+            font-size: 1.1em; /* Увеличено */
+            font-weight: 600;
+        }
+        .toggle-btn {
+            padding: 10px 20px; /* Увеличено */
+            border-radius: 20px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em; /* Увеличено */
+            transition: background-color 0.3s ease;
+        }
+        .on {
+            background-color: #4CAF50;
+        }
+        .off {
+            background-color: #F44336;
+        }
+        .temp-control {
+            display: flex;
+            align-items: center;
+            margin-right: 20px; /* Увеличено */
+            gap: 10px; /* Добавлено расстояние между элементами */
+        }
+        .temp-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            width: 35px; /* Увеличено */
+            height: 35px; /* Увеличено */
+            border-radius: 50%;
+            font-size: 18px; /* Увеличено */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .temp-btn:hover {
+            background: #0d8bf2;
+        }
+        .temp-value {
+            margin: 0 10px;
+            min-width: 50px; /* Увеличено */
+            text-align: center;
+            font-size: 1.1em; /* Увеличено */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="header">Smart Life</h1>
+    <div id="devices-container"></div>
+
+    <script>
+        const devices = [
+            { id: 1, name: "Умный свет", type: "light", status: false },
+            { id: 2, name: "Кондиционер", type: "ac", status: true, temp: 22 },
+            { id: 3, name: "Умная розетка", type: "socket", status: false }
+        ];
+
+        function renderDevices() {
+            const container = document.getElementById('devices-container');
+            container.innerHTML = '';
+
+            devices.forEach(device => {
+                const card = document.createElement('div');
+                card.className = 'device-card';
+
+                // Иконка и название
+                const deviceInfo = document.createElement('div');
+                deviceInfo.className = 'device-info';
+
+                const icon = document.createElement('div');
+                icon.className = 'device-icon';
+                icon.textContent = getDeviceIcon(device.type);
+                deviceInfo.appendChild(icon);
+
+                const name = document.createElement('div');
+                name.className = 'device-name';
+                name.textContent = device.name;
+                deviceInfo.appendChild(name);
+
+                card.appendChild(deviceInfo);
+
+                // Управление температурой (для кондиционера)
+                if (device.type === 'ac' && device.status) {
+                    const tempControl = document.createElement('div');
+                    tempControl.className = 'temp-control';
+
+                    const minusBtn = document.createElement('button');
+                    minusBtn.className = 'temp-btn';
+                    minusBtn.textContent = '-';
+                    minusBtn.onclick = () => changeTemp(device, -1);
+                    tempControl.appendChild(minusBtn);
+
+                    const tempValue = document.createElement('div');
+                    tempValue.className = 'temp-value';
+                    tempValue.textContent = `${device.temp}°C`;
+                    tempControl.appendChild(tempValue);
+
+                    const plusBtn = document.createElement('button');
+                    plusBtn.className = 'temp-btn';
+                    plusBtn.textContent = '+';
+                    plusBtn.onclick = () => changeTemp(device, 1);
+                    tempControl.appendChild(plusBtn);
+
+                    card.appendChild(tempControl);
+                }
+
+                // Кнопка переключения
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = `toggle-btn ${device.status ? 'on' : 'off'}`;
+                toggleBtn.textContent = device.status ? 'ВКЛ' : 'ВЫКЛ';
+                toggleBtn.onclick = () => toggleDevice(device);
+
+                card.appendChild(toggleBtn);
+                container.appendChild(card);
+            });
+        }
+
+        function getDeviceIcon(type) {
+            switch(type) {
+                case 'light': return '💡';
+                case 'ac': return '❄️';
+                case 'socket': return '🔌';
+                default: return '📱';
+            }
+        }
+
+        function toggleDevice(device) {
+            device.status = !device.status;
+            renderDevices();
+        }
+
+        function changeTemp(device, delta) {
+            device.temp += delta;
+            renderDevices();
+        }
+
+        // Первоначальная отрисовка
+        renderDevices();
+    </script>
+</body>
+</html>
