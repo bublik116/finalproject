@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Life</title>
+    <title>Smart Life - Температурный мониторинг</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style> 
         body {
-            background-image: url('https://i.pinimg.com/736x/99/82/7c/99827cfb2942879e9bb63dfade5167e0.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-color: #f5f5f5;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
@@ -18,53 +15,53 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px; /* Увеличено */
+            margin-bottom: 30px;
             color: #333;
-            font-size: 2.5em; /* Увеличено */
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Добавлена тень */
+            font-size: 2.5em;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
         #devices-container {
             display: flex;
             flex-direction: column;
-            gap: 25px; /* Основное увеличение расстояния между карточками */
+            gap: 25px;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px 0;
         }
         .device-card {
-            background: rgba(255, 255, 255, 0.95); /* Полупрозрачный белый */
-            border-radius: 12px; /* Увеличено */
-            padding: 20px; /* Увеличено */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Усилена тень */
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .device-card:hover {
-            transform: translateY(-3px); /* Эффект при наведении */
+            transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         .device-info {
             display: flex;
             align-items: center;
-            gap: 15px; /* Увеличено расстояние между иконкой и текстом */
+            gap: 15px;
         }
         .device-icon {
-            font-size: 28px; /* Увеличено */
+            font-size: 28px;
         }
         .device-name {
-            font-size: 1.1em; /* Увеличено */
+            font-size: 1.1em;
             font-weight: 600;
         }
         .toggle-btn {
-            padding: 10px 20px; /* Увеличено */
+            padding: 10px 20px;
             border-radius: 20px;
             border: none;
             color: white;
             font-weight: bold;
             cursor: pointer;
-            font-size: 1em; /* Увеличено */
+            font-size: 1em;
             transition: background-color 0.3s ease;
         }
         .on {
@@ -76,17 +73,17 @@
         .temp-control {
             display: flex;
             align-items: center;
-            margin-right: 20px; /* Увеличено */
-            gap: 10px; /* Добавлено расстояние между элементами */
+            margin-right: 20px;
+            gap: 10px;
         }
         .temp-btn {
             background: #2196F3;
             color: white;
             border: none;
-            width: 35px; /* Увеличено */
-            height: 35px; /* Увеличено */
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            font-size: 18px; /* Увеличено */
+            font-size: 18px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -95,18 +92,198 @@
         }
         .temp-value {
             margin: 0 10px;
-            min-width: 50px; /* Увеличено */
+            min-width: 50px;
             text-align: center;
-            font-size: 1.1em; /* Увеличено */
+            font-size: 1.1em;
             font-weight: 600;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .time-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .time-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .time-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+        .stats-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <h1 class="header">Smart Life</h1>
+    
+    <div class="chart-container">
+        <canvas id="temperatureChart"></canvas>
+        <div class="time-buttons">
+            <button class="time-btn active" onclick="changeTimeRange('24h')">24ч</button>
+            <button class="time-btn" onclick="changeTimeRange('7d')">7 дней</button>
+            <button class="time-btn" onclick="changeTimeRange('30d')">Месяц</button>
+        </div>
+    </div>
+    
+    <div class="stats-panel">
+        <div class="stat-item">
+            <div class="stat-value" id="min-temp">22°C</div>
+            <div class="stat-label">Минимальная (03:15)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="avg-temp">23°C</div>
+            <div class="stat-label">Средняя</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="max-temp">24°C</div>
+            <div class="stat-label">Максимальная (14:40)</div>
+        </div>
+    </div>
+    
     <div id="devices-container"></div>
 
     <script>
+        // Данные для графика (заглушка)
+        const temperatureData = {
+            '24h': generateRandomData(24, 20, 25),
+            '7d': generateRandomData(7, 18, 26),
+            '30d': generateRandomData(30, 15, 28)
+        };
+        
+        let currentRange = '24h';
+        let temperatureChart;
+
+        // Инициализация графика
+        function initChart() {
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            
+            temperatureChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: generateLabels(currentRange),
+                    datasets: [{
+                        label: 'Температура (°C)',
+                        data: temperatureData[currentRange],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Температура (°C)'
+                            },
+                            min: Math.min(...temperatureData[currentRange]) - 2,
+                            max: Math.max(...temperatureData[currentRange]) + 2,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Время'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Генерация случайных данных для демонстрации
+        function generateRandomData(count, min, max) {
+            return Array.from({length: count}, () => 
+                Math.floor(Math.random() * (max - min + 1)) + min
+            );
+        }
+        
+        // Генерация подписей для оси X
+        function generateLabels(range) {
+            if (range === '24h') {
+                return Array.from({length: 24}, (_, i) => `${i}:00`);
+            } else if (range === '7d') {
+                return ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            } else {
+                return Array.from({length: 30}, (_, i) => `${i+1} день`);
+            }
+        }
+        
+        // Изменение временного диапазона
+        function changeTimeRange(range) {
+            currentRange = range;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === 
+                    (range === '24h' ? '24ч' : range === '7d' ? '7 дней' : 'Месяц'));
+            });
+            
+            // Обновляем график
+            temperatureChart.data.labels = generateLabels(range);
+            temperatureChart.data.datasets[0].data = temperatureData[range];
+            temperatureChart.options.scales.y.min = Math.min(...temperatureData[range]) - 2;
+            temperatureChart.options.scales.y.max = Math.max(...temperatureData[range]) + 2;
+            temperatureChart.update();
+            
+            // Обновляем статистику (заглушка)
+            updateStats(range);
+        }
+        
+        // Обновление статистики (заглушка)
+        function updateStats(range) {
+            const data = temperatureData[range];
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const avg = (data.reduce((a, b) => a + b, 0) / data.length).toFixed(1);
+            
+            document.getElementById('min-temp').textContent = `${min}°C`;
+            document.getElementById('max-temp').textContent = `${max}°C`;
+            document.getElementById('avg-temp').textContent = `${avg}°C`;
+        }
+
+        // Остальной код для устройств (как в оригинале)
         const devices = [
             { id: 1, name: "Умный свет", type: "light", status: false },
             { id: 2, name: "Кондиционер", type: "ac", status: true, temp: 22 },
@@ -192,8 +369,11 @@
             renderDevices();
         }
 
-        // Первоначальная отрисовка
-        renderDevices();
+        // Инициализация при загрузке
+        window.onload = function() {
+            initChart();
+            renderDevices();
+        };
     </script>
 </body>
 </html>
