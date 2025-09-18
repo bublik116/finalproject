@@ -1,0 +1,2 @@
+source C:/Users/arduino/CascadeProjects/snake-asm/esp32-fridge/firmware/build/bootloader/gdbinit/symbols
+source C:/Users/arduino/CascadeProjects/snake-asm/esp32-fridge/firmware/build/bootloader/gdbinit/connect
