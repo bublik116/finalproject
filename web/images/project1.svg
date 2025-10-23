@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0f14"/>
+      <stop offset="100%" stop-color="#151b23"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g)"/>
+  <g fill="none" stroke="#1f2630" opacity="0.8">
+    <rect x="60" y="60" width="680" height="480" rx="18"/>
+    <rect x="90" y="110" width="300" height="200" rx="10"/>
+    <rect x="420" y="110" width="290" height="120" rx="10"/>
+    <rect x="420" y="250" width="290" height="60" rx="10"/>
+    <rect x="90" y="330" width="620" height="150" rx="10"/>
+  </g>
+  <g font-family="Segoe UI, Roboto, Arial, sans-serif" fill="#dce2ea">
+    <text x="80" y="95" font-size="28" font-weight="700">Проект 1 — устройство на ESP32</text>
+    <text x="100" y="150" font-size="16" fill="#9aa7b5">MCU: ESP32 | Связь: Wi‑Fi/BLE | Протокол: MQTT</text>
+    <text x="100" y="180" font-size="16" fill="#9aa7b5">Датчики: температура / влажность | Питание: 12V → 3.3V</text>
+    <text x="100" y="210" font-size="16" fill="#9aa7b5">Корпус: промышленный, клеммы RS‑485</text>
+  </g>
+  <g>
+    <circle cx="460" cy="320" r="6" fill="#58a6ff"/>
+    <circle cx="490" cy="320" r="6" fill="#3fb950"/>
+    <circle cx="520" cy="320" r="6" fill="#f1c232"/>
+    <text x="540" y="325" font-size="14" fill="#bcd3ee">Статусы / индикаторы</text>
+  </g>
+  <rect x="60" y="520" width="200" height="28" rx="6" fill="#14304e" stroke="#1f4971"/>
+  <text x="80" y="540" font-size="14" fill="#9dd1ff">Заглушка изображения (SVG)</text>
+</svg>

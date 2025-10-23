@@ -1,0 +1,10 @@
+# Параметры SDK по умолчанию для прошивки esp32_fridge (меняйте по необходимости)
+# Данные Wi‑Fi для MVP задаются в коде/конфиге, позже вынесем в Provisioning
+# Примеры опций, которые можно включить позже:
+# CONFIG_ESP_MAIN_TASK_STACK_SIZE=8192
+# CONFIG_ESP_HTTP_SERVER_DEFAULT_CONFIG=y
+
+# Подсказка: переменные среды и конфиги сети можно хранить в NVS/JSON
+# WIFI_SSID=YourSSID
+# WIFI_PASS=YourPass
+# MQTT_URI=mqtt://192.168.1.10:1883

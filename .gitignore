@@ -1,0 +1,13 @@
+*.a
+*.obj
+*.bin
+*.elf
+*.map
+*.o
+*.out
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pyz

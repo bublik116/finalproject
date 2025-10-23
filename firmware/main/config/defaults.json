@@ -1,0 +1,14 @@
+{
+  "device_id": "DEV-001",
+  "site_id": "SITE-LOCAL",
+  "mqtt_uri": "mqtt://192.168.1.10:1883",
+  "setpoint": -3.0,
+  "hysteresis": 1.0,
+  "ton_min_s": 120,
+  "toff_min_s": 180,
+  "start_delay_s": 60,
+  "defrost": {"type": "time", "interval_min": 360, "max_min": 20},
+  "fan": {"mode": "with_compressor", "post_delay_s": 30},
+  "door": {"door_alarm_s": 120, "fan_off_on_door": true},
+  "calib": {"room": 0.0, "evap": 0.0, "aux1": 0.0, "aux2": 0.0}
+}

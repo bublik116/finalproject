@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0f14"/>
+      <stop offset="100%" stop-color="#11161c"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g2)"/>
+  <g fill="none" stroke="#1f2630" opacity="0.9">
+    <rect x="60" y="60" width="680" height="480" rx="18"/>
+    <rect x="90" y="110" width="620" height="120" rx="10"/>
+    <rect x="90" y="250" width="280" height="220" rx="10"/>
+    <rect x="430" y="250" width="280" height="220" rx="10"/>
+  </g>
+  <g font-family="Segoe UI, Roboto, Arial, sans-serif" fill="#dce2ea">
+    <text x="80" y="95" font-size="28" font-weight="700">Проект 2 — шлюз RS-485 ↔ Ethernet</text>
+    <text x="110" y="150" font-size="16" fill="#9aa7b5">Интерфейсы: RS-485/Modbus RTU, Ethernet/Modbus TCP</text>
+    <text x="110" y="175" font-size="16" fill="#9aa7b5">Питание: 24V, развязка, защита ESD/TVS</text>
+    <text x="110" y="200" font-size="16" fill="#9aa7b5">Индикация: LINK/ACT, TX/RX, питание</text>
+  </g>
+  <g>
+    <rect x="120" y="280" width="220" height="40" rx="8" fill="#263547" stroke="#1f4971"/>
+    <text x="140" y="305" font-size="14" fill="#cfe7ff">Modbus RTU → TCP bridge</text>
+    <rect x="460" y="280" width="220" height="40" rx="8" fill="#263547" stroke="#1f4971"/>
+    <text x="480" y="305" font-size="14" fill="#cfe7ff">MQTT publisher</text>
+  </g>
+  <rect x="60" y="520" width="240" height="28" rx="6" fill="#14304e" stroke="#1f4971"/>
+  <text x="80" y="540" font-size="14" fill="#9dd1ff">Заглушка изображения (SVG)</text>
+</svg>

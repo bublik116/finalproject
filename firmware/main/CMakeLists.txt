@@ -1,0 +1,21 @@
+idf_component_register(
+    SRCS
+        "app_main.c"
+        "core/event_bus.c"
+        "tasks_control.c"
+        "tasks_sensors.c"
+        "tasks_ui.c"
+        "tasks_comms.c"
+        "tasks_storage.c"
+        "tasks_ota.c"
+        "drivers/drv_relay_uln2003.c"
+        "drivers/drv_tm1637.c"
+        "drivers/drv_keys.c"
+        "drivers/drv_buzzer.c"
+        "drivers/drv_onewire.c"
+        "drivers/drv_ds18b20.c"
+    INCLUDE_DIRS
+        "."
+        "core"
+        "drivers"
+)

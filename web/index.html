@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESP32 Fridge — Панель управления (Frontend)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>ESP32 Fridge</h1>
+    <div class="conn">
+      <span id="connStatus" class="badge grey">оффлайн</span>
+      <input id="baseUrl" type="text" placeholder="http://device.local" />
+      <button id="saveUrlBtn">Сохранить URL</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- Вкладки -->
+    <section class="card tabs">
+      <button id="tabOverview" class="tab active">Обзор</button>
+      <button id="tabHistory" class="tab">История температур</button>
+      <button id="tabControls" class="tab">Оттайка/Дверь/Зуммер</button>
+    </section>
+
+    <!-- Температуры (Обзор) -->
+    <section class="card view overview">
+      <h2>Температуры</h2>
+      <div class="temp-grid">
+        <div class="temp-item">
+          <div class="temp-value" id="tRoom">—</div>
+          <div class="temp-label">Камера</div>
+        </div>
+        <div class="temp-item">
+          <div class="temp-value" id="tEvap">—</div>
+          <div class="temp-label">Испаритель</div>
+        </div>
+      </div>
+      <div class="hint">Отображается по данным устройства. В мок‑режиме — сэмплы.</div>
+    </section>
+
+    <section class="card view overview">
+      <h2>Состояние</h2>
+      <div class="state-list">
+        <div><span class="label">Компрессор:</span> <span id="relayComp" class="badge grey">—</span></div>
+        <div><span class="label">Вентилятор:</span> <span id="relayFan" class="badge grey">—</span></div>
+        <div><span class="label">Оттайка:</span> <span id="relayDef" class="badge grey">—</span></div>
+        <div><span class="label">Свет:</span> <span id="relayLight" class="badge grey">—</span></div>
+        <div><span class="label">Дверь:</span> <span id="door" class="badge grey">—</span></div>
+        <div><span class="label">Режим:</span> <span id="mode" class="badge blue">—</span></div>
+      </div>
+      <div class="actions">
+        <button id="toggleLightBtn">Переключить свет</button>
+        <button id="coolRoomBtn" class="secondary">Охладить камеру (мок)</button>
+        <button id="heatRoomBtn" class="secondary">Нагреть камеру (мок)</button>
+        <button id="coolEvapBtn" class="secondary">Охладить испаритель (мок)</button>
+        <button id="heatEvapBtn" class="secondary">Нагреть испаритель (мок)</button>
+      </div>
+    </section>
+
+    <section class="card view overview">
+      <h2>Настройки</h2>
+      <div class="form">
+        <label>Setpoint (°C)
+          <input id="spInput" type="number" step="0.1" value="-3.0" />
+        </label>
+        <label>Hysteresis (°C)
+          <input id="hystInput" type="number" step="0.1" value="1.0" />
+        </label>
+        <label>Миним. включение (с)
+          <input id="tonInput" type="number" step="1" value="120" />
+        </label>
+        <label>Миним. выключение (с)
+          <input id="toffInput" type="number" step="1" value="180" />
+        </label>
+        <label>Стартовая задержка (с)
+          <input id="startDelayInput" type="number" step="1" value="60" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="saveCfgBtn">Сохранить</button>
+        <span id="saveStatus" class="muted"></span>
+      </div>
+      <div class="hint">Пока без реального бэкенда — значения сохраняются в localStorage и применяются к мок‑данным.</div>
+    </section>
+
+    <!-- История температур -->
+    <section class="card view history hidden">
+      <h2>История температур</h2>
+      <div class="control-group">
+        <label for="autoScroll">Автопрокрутка</label>
+        <input id="autoScroll" type="checkbox" checked />
+        <label for="histLen">Длина истории (точек):</label>
+        <input id="histLen" type="number" min="100" max="5000" step="100" value="1000" />
+      </div>
+      <canvas id="histCanvas" width="1000" height="260"></canvas>
+      <div class="legend">
+        <span class="dot room"></span> Камера
+        <span class="dot evap"></span> Испаритель
+      </div>
+      <h3>Аварии/События</h3>
+      <div id="alarms" class="alarms"></div>
+    </section>
+
+    <!-- Управление оттайкой/дверью/зуммером (мок) -->
+    <section class="card view controls hidden">
+      <h2>Оттайка / Дверь / Зуммер (мок)</h2>
+      <div class="actions">
+        <button id="defrostStartBtn">Старт оттайки</button>
+        <button id="defrostStopBtn" class="secondary">Стоп оттайки</button>
+      </div>
+      <div class="actions">
+        <button id="doorOpenBtn">Открыть дверь (мок)</button>
+        <button id="doorCloseBtn" class="secondary">Закрыть дверь (мок)</button>
+      </div>
+      <div class="actions">
+        <button id="beepBtn">Звуковой сигнал (мок)</button>
+      </div>
+      <div class="hint">Это мок‑элементы для UX. Позже привяжем к реальным API устройства.</div>
+    </section>
+
+    <!-- Логи/события -->
+    <section class="card view overview">
+      <h2>Журнал</h2>
+      <div id="log" class="log"></div>
+      <div class="actions">
+        <button id="clearLogBtn">Очистить</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Frontend‑панель. Для интеграции с устройством добавим реальные REST/WebSocket API позже.</small>
+  </footer>
+
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
